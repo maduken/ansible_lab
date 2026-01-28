@@ -7,13 +7,36 @@
     - name: update repository index
       ansible.builtin.dnf:
         update_cache: yes
+      when: ansible_distribution == "RedHat" 
 
-    - name: Install the latest version of Apache
+    - name: Install the latest version of Httpd
       ansible.builtin.dnf:
         name: httpd 
         state: latest 
-  
+      when: ansible_distribution == "RedHat"
+
     - name: add php support for apache
       ansible.builtin.dnf:
         name: php
         state: latest
+      when: ansible_distribution == "RedHat"
+
+
+
+    - name: update repository index
+      apt:
+        update_cache: yes
+      when: ansible_distribution == "Ubuntu"
+
+    - name: Install the latest version of Apache
+      apt:
+        name: apache2
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+    - name: add php support for apache
+      apt:
+        name: libapache2-mod-php
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+                                                                                           
