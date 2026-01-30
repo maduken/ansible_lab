@@ -4,39 +4,65 @@
   become: true
   tasks:
 
-    - name: update repository index
-      ansible.builtin.dnf:
-        update_cache: yes
-      when: ansible_distribution == "RedHat" 
+  - name: install updates (Redhat)
+    ansible.builtin.dnf:
+       update_only: yes
+       update_cache: yes
+    when: ansible_distribution == "Red Hat Enterprise Linux"
 
-    - name: Install the latest version of Httpd
-      ansible.builtin.dnf:
-        name: httpd 
-        state: latest 
-      when: ansible_distribution == "RedHat"
 
-    - name: add php support for apache
+  - name: install updates (Ubuntu)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+   
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: install httpd and php for Redhat servers
       ansible.builtin.dnf:
-        name: php
+        name: 
+          - httpd
+          - php
+          - openssl 
         state: latest
       when: ansible_distribution == "RedHat"
 
 
 
-    - name: update repository index
+    - name: install apache and php for Ubuntu servers 
       apt:
-        update_cache: yes
-      when: ansible_distribution == "Ubuntu"
-
-    - name: Install the latest version of Apache
-      apt:
-        name: apache2
+        name:
+          - apache2
+          - libapache2-mod-phpi
+          - openssl
         state: latest
       when: ansible_distribution == "Ubuntu"
 
-    - name: add php support for apache
-      apt:
-        name: libapache2-mod-php
-        state: latest
-      when: ansible_distribution == "Ubuntu"
-                                                                                           
+                                                                                          
+
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb for Redhat servers
+    ansible.builtin.dnf:
+      name:
+        - mariadb
+      state: latest
+    when: ansible_distribution == "RedHat"
+
+
+
+  - name: install mariadb for Ubuntu servers
+    apt:
+      name:
+        - mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+ 
