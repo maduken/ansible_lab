@@ -5,6 +5,7 @@
   tasks:
 
   - name: install updates (Redhat)
+    tags: always 
     ansible.builtin.dnf:
        update_only: yes
        update_cache: yes
@@ -12,6 +13,7 @@
 
 
   - name: install updates (Ubuntu)
+    tags: always 
     apt:
       upgrade: dist
       update_cache: yes
@@ -24,6 +26,7 @@
   tasks:
 
     - name: install httpd and php for Redhat servers
+      tags: redhat, httpd, php
       ansible.builtin.dnf:
         name: 
           - httpd
@@ -35,6 +38,7 @@
 
 
     - name: install apache and php for Ubuntu servers 
+      tags: ubuntu, apache2
       apt:
         name:
           - apache2
@@ -51,6 +55,7 @@
   tasks:
 
   - name: install mariadb for Redhat servers
+    tags: redhat, db, mariadb
     ansible.builtin.dnf:
       name:
         - mariadb
@@ -60,9 +65,9 @@
 
 
   - name: install mariadb for Ubuntu servers
+    tags: ubuntu, db, mariadb
     apt:
       name:
         - mariadb-server
       state: latest
     when: ansible_distribution == "Ubuntu"
- 
