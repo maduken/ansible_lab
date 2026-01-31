@@ -4,21 +4,32 @@
   become: true
   tasks:
 
-  - name: install updates (Redhat)
+  - name: update repo cache (Redhat)
     tags: always 
     ansible.builtin.dnf:
-       update_only: yes
        update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Red Hat Enterprise Linux"
 
 
-  - name: install updates (Ubuntu)
+  - name: update repo cache (Ubuntu)
     tags: always 
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
    
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for new user
+    tags: always
+    authorized_key: 
+      user: ansibleUSER
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJppgD0/1XkKzgpsBp3SxA7O9lgtz/zf6+BFj1WDHVxE ansible"     
+
 
 
 - hosts: web_servers
@@ -35,6 +46,13 @@
         state: latest
       when: ansible_distribution == "RedHat"
 
+    - name: start httpd (Redhaat)
+      tags: apache, redhat, httpd
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_distribution == "RedHat"
 
 
     - name: install apache and php for Ubuntu servers 

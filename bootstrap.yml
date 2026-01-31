@@ -1,0 +1,48 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: install updates (Redhat)
+    tags: always 
+    ansible.builtin.dnf:
+       update_only: yes
+       update_cache: yes
+    when: ansible_distribution == "Red Hat Enterprise Linux"
+
+
+  - name: install updates (Ubuntu)
+    tags: always 
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+   
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create ansible user
+    tags: always
+    user:
+      name: ansibleUSER
+      groups: root
+
+  - name: add ssh key for new user
+    tags: always
+    authorized_key: 
+      user: ansibleUSER
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJppgD0/1XkKzgpsBp3SxA7O9lgtz/zf6+BFj1WDHVxE ansible"     
+
+
+  - name: add sudoers file for ansibleUSER
+    tags: always
+    copy: 
+      src: sudoer_ansibleUSER
+      dest: /etc/sudoers.d/ansibleUSER
+      owner: root
+      group: root
+      mode: 0440
+
