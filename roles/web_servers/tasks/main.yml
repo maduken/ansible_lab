@@ -1,0 +1,27 @@
+- name: install httpd and php for Redhat servers
+  tags: redhat, httpd, php
+  ansible.builtin.dnf:
+    name:
+      - httpd
+      - php
+      - openssl
+    state: latest
+  when: ansible_distribution == "RedHat"
+
+- name: start httpd (Redhaat)
+  tags: apache, redhat, httpd
+  service:
+    name: httpd
+    state: started
+    enabled: yes
+  when: ansible_distribution == "RedHat"
+
+- name: install apache and php for Ubuntu servers
+  tags: ubuntu, apache2
+  apt:
+    name:
+      - apache2
+      - libapache2-mod-phpi
+      - openssl
+    state: latest
+  when: ansible_distribution == "Ubuntu"

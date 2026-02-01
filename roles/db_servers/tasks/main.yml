@@ -1,0 +1,18 @@
+- name: install mariadb for Redhat servers
+  tags: redhat, db, mariadb
+  ansible.builtin.dnf:
+     name:
+       - mariadb
+     state: latest
+  when: ansible_distribution == "RedHat"
+
+
+
+- name: install mariadb for Ubuntu servers
+  tags: ubuntu, db, mariadb
+  apt:
+    name:
+     - mariadb-server
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
