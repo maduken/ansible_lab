@@ -1,0 +1,91 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: update repo cache (Redhat)
+    tags: always 
+    ansible.builtin.dnf:
+       update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Red Hat Enterprise Linux"
+
+
+  - name: update repo cache (Ubuntu)
+    tags: always 
+    apt:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+   
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: add ssh key for new user
+    tags: always
+    authorized_key: 
+      user: ansibleUSER
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJppgD0/1XkKzgpsBp3SxA7O9lgtz/zf6+BFj1WDHVxE ansible"     
+
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+    - name: install httpd and php for Redhat servers
+      tags: redhat, httpd, php
+      ansible.builtin.dnf:
+        name: 
+          - httpd
+          - php
+          - openssl 
+        state: latest
+      when: ansible_distribution == "RedHat"
+
+    - name: start httpd (Redhaat)
+      tags: apache, redhat, httpd
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: ansible_distribution == "RedHat"
+
+
+    - name: install apache and php for Ubuntu servers 
+      tags: ubuntu, apache2
+      apt:
+        name:
+          - apache2
+          - libapache2-mod-phpi
+          - openssl
+        state: latest
+      when: ansible_distribution == "Ubuntu"
+
+                                                                                          
+
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb for Redhat servers
+    tags: redhat, db, mariadb
+    ansible.builtin.dnf:
+      name:
+        - mariadb
+      state: latest
+    when: ansible_distribution == "RedHat"
+
+
+
+  - name: install mariadb for Ubuntu servers
+    tags: ubuntu, db, mariadb
+    apt:
+      name:
+        - mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
