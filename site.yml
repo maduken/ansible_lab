@@ -9,7 +9,7 @@
     ansible.builtin.dnf:
        update_cache: yes
     changed_when: false
-    when: ansible_distribution == "Red Hat Enterprise Linux"
+    when: ansible_distribution == "Redhat"
 
 
   - name: update repo cache (Ubuntu)

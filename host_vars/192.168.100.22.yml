@@ -1,0 +1,6 @@
+apache_package_name: httpd
+apache_service: httpd
+php_package_name: php
+openssl_package_name: openssl
+mysql_package_name: mysql
+mrtg_package_name: mrtg 

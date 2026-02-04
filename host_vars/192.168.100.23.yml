@@ -1,0 +1,4 @@
+samba_package_name: samba
+nfs_package_name: nfs-utils
+glusterfs_packing_name: glusterfs
+vsftpd_package_name: vsftpd

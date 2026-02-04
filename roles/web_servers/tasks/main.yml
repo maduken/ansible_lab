@@ -1,17 +1,20 @@
-- name: install httpd and php for Redhat servers
+- name: install httpd, php, openssl, mysql, mrtg Redhat servers
+  become: yes
   tags: redhat, httpd, php
   ansible.builtin.dnf:
     name:
-      - httpd
-      - php
-      - openssl
+      - "{{ apache_package_name }}"
+      - "{{ php_package_name }}"
+      - "{{ openssl_package_name }}"
+      - "{{ mysql_package_name }}"
+      - "{{ mrtg_package_name }}"
     state: latest
-  when: ansible_distribution == "RedHat"
+
 
 - name: start httpd (Redhaat)
   tags: apache, redhat, httpd
   service:
-    name: httpd
+    name: "{{ apache_service }}" 
     state: started
     enabled: yes
   when: ansible_distribution == "RedHat"
@@ -25,3 +28,12 @@
       - openssl
     state: latest
   when: ansible_distribution == "Ubuntu"
+
+ #name: deploy Apache config
+ # template:
+ #src: httpd.conf.j2
+ #  dest: /etc/httpd/conf/httpd.conf
+ # notify: restart_httpd
+
+
+

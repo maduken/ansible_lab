@@ -1,0 +1,5 @@
+apache_package_name: apache2
+apache_service: apache2
+php_packing_name: libapache2-mode-php
+openssl_package_name: openssl
+
